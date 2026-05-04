@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Production build
+dist/
+
+# SQLite Database (données privées - NE PAS partager)
+backend/data/*.db
+backend/data/*.db-wal
+backend/data/*.db-shm
+
+# Environnement secrets
+.env
+.env.local
+.env.production
+backend/.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
