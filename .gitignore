@@ -27,3 +27,9 @@ Thumbs.db
 # IDE
 .vscode/settings.json
 .idea/
+
+# Large screenshots (trop gros pour GitHub)
+*.png
+!src/assets/logo.png
+!public/icon-192.png
+!public/icon-512.png
