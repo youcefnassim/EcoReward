@@ -6,8 +6,9 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
-  headers: { 
-    'Content-Type': 'application/json'
+  headers: {
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'  // Bypass ngrok warning page
   },
 });
 
