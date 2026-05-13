@@ -1,14 +1,13 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ensure-headset-unfair.ngrok-free.dev/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 // ─── Axios Instance ──────────────────────────────────────────────────────────
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   headers: { 
-    'Content-Type': 'application/json',
-    'ngrok-skip-browser-warning': 'true'  // Bypass ngrok warning page
+    'Content-Type': 'application/json'
   },
 });
 
