@@ -20,7 +20,7 @@ import { useI18n } from '../context/I18nContext';
 
 const Dashboard = () => {
   const { userData, refreshUser } = useAuth();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const navigate = useNavigate();
   const [recentActivity, setRecentActivity] = useState([]);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
