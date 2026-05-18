@@ -201,3 +201,26 @@
 .shadow-card-hover {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
+
+/* Scanner line animation */
+@keyframes scan {
+  0%   { top: 10%; }
+  50%  { top: 85%; }
+  100% { top: 10%; }
+}
+
+/* PWA install banner slide-in (replaces Tailwind v4 animate-in) */
+.slide-in-from-top {
+  animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Dark mode body bg */
+.dark body,
+.dark {
+  background-color: #030712;
+}

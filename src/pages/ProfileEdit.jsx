@@ -13,7 +13,7 @@ const AVATARS = [
 const ProfileEdit = () => {
   const { userData, refreshUser } = useAuth();
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState(userData?.fullName || '');
+  const [fullName, setFullName] = useState(userData?.full_name || '');
   const [avatar, setAvatar] = useState(userData?.avatar || '');
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +37,7 @@ const ProfileEdit = () => {
 
     setLoading(true);
     try {
-      await usersAPI.updateMe({ fullName, avatar });
+      await usersAPI.updateMe({ full_name: fullName, avatar });
       await refreshUser();
       toast.success('Profil mis à jour !');
       navigate('/settings');
@@ -129,7 +129,7 @@ const ProfileEdit = () => {
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input 
                   type="email" 
-                  value={userData?.email}
+                  value={userData?.email || ''}
                   disabled
                   className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-950 rounded-2xl border border-transparent text-sm font-bold text-gray-400 cursor-not-allowed"
                 />

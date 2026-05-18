@@ -49,7 +49,7 @@ const Leaderboard = () => {
               <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-2 border-2 border-gray-200 dark:border-gray-700 relative">
                 <span className="text-2xl font-black text-gray-400">2</span>
               </div>
-              <p className="text-[10px] font-bold text-gray-500 text-center w-20 truncate">{leaders[1].fullName}</p>
+              <p className="text-[10px] font-bold text-gray-500 text-center w-20 truncate">{leaders[1].full_name}</p>
               <p className="text-xs font-black text-gray-400">{leaders[1].points} DA</p>
             </div>
           )}
@@ -59,7 +59,7 @@ const Leaderboard = () => {
                 <Trophy className="w-10 h-10 text-yellow-500" />
                 <div className="absolute -top-3 -right-2 bg-yellow-400 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-black">1</div>
               </div>
-              <p className="text-xs font-black text-gray-900 dark:text-white text-center w-24 truncate">{leaders[0].fullName}</p>
+              <p className="text-xs font-black text-gray-900 dark:text-white text-center w-24 truncate">{leaders[0].full_name}</p>
               <p className="text-sm font-black text-yellow-600">{leaders[0].points} DA</p>
             </div>
           )}
@@ -68,7 +68,7 @@ const Leaderboard = () => {
               <div className="w-16 h-16 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center mb-2 border-2 border-orange-200 dark:border-orange-800 relative">
                 <span className="text-2xl font-black text-orange-400">3</span>
               </div>
-              <p className="text-[10px] font-bold text-gray-500 text-center w-20 truncate">{leaders[2].fullName}</p>
+              <p className="text-[10px] font-bold text-gray-500 text-center w-20 truncate">{leaders[2].full_name}</p>
               <p className="text-xs font-black text-orange-400">{leaders[2].points} DA</p>
             </div>
           )}
@@ -85,7 +85,7 @@ const Leaderboard = () => {
                   {idx + 1}
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900 dark:text-white text-sm">{leader.fullName}</p>
+                  <p className="font-bold text-gray-900 dark:text-white text-sm">{leader.full_name}</p>
                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{leader.studentId}</p>
                 </div>
               </div>

@@ -1,21 +1,23 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 import { authAPI, usersAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);       // { uid, email, token }
-  const [userData, setUserData] = useState(null); // full profile from DB
-  const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('eco-dark') === 'true';
-  });
+  const [user, setUser]         = useState(null);   // Supabase Auth user
+  const [userData, setUserData] = useState(null);   // profil Supabase (table profiles)
+  const [loading, setLoading]   = useState(true);
 
-  // ─── Dark mode init ────────────────────────────────────────────────────────
+  // ─── Dark mode ─────────────────────────────────────────────────────────────
+  const [darkMode, setDarkMode] = useState(() =>
+    localStorage.getItem('eco-dark') === 'true'
+  );
+
   useEffect(() => {
     if (darkMode) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
+    else          document.documentElement.classList.remove('dark');
   }, [darkMode]);
 
   const toggleDarkMode = () => {
@@ -24,70 +26,95 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('eco-dark', String(next));
   };
 
-  // ─── Restore session from localStorage ────────────────────────────────────
+  // ─── Charger le profil depuis Supabase ─────────────────────────────────────
+  const loadProfile = async (authUser) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
+
+      if (error) throw error;
+      setUserData(data);
+    } catch (err) {
+      console.error('loadProfile error:', err.message);
+      setUserData(null);
+    }
+  };
+
+  // ─── Écouter les changements de session Supabase ──────────────────────────
   useEffect(() => {
-    const token = localStorage.getItem('eco_token');
-    const savedUser = localStorage.getItem('eco_user');
-    if (token && savedUser) {
-      try {
-        const parsed = JSON.parse(savedUser);
-        setUser(parsed);
-        // Refresh profile from server
-        usersAPI.getMe()
-          .then((data) => setUserData(data))
-          .catch(() => {
-            // Token expired — clear session
-            localStorage.removeItem('eco_token');
-            localStorage.removeItem('eco_user');
-            setUser(null);
-            setUserData(null);
-          })
-          .finally(() => setLoading(false));
-      } catch {
+    // Récupère la session existante au montage
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user);
+        loadProfile(session.user).finally(() => setLoading(false));
+      } else {
         setLoading(false);
       }
-    } else {
-      setLoading(false);
-    }
+    });
+
+    // Listener temps réel sur les changements d'auth
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          setUser(session.user);
+          await loadProfile(session.user);
+        } else {
+          setUser(null);
+          setUserData(null);
+        }
+        setLoading(false);
+      }
+    );
+
+    // Cleanup
+    return () => subscription?.unsubscribe();
   }, []);
+
+  // ─── Real-time subscription : met à jour les points en direct ─────────────
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel(`profile:${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${user.id}` },
+        (payload) => {
+          setUserData((prev) => ({ ...prev, ...payload.new }));
+        }
+      )
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [user]);
 
   // ─── Login ─────────────────────────────────────────────────────────────────
   const login = async (email, password) => {
     const data = await authAPI.login(email, password);
-    localStorage.setItem('eco_token', data.token);
-    localStorage.setItem('eco_user', JSON.stringify({ uid: data.user.uid, email: data.user.email }));
-    setUser({ uid: data.user.uid, email: data.user.email });
-    setUserData(data.user);
+    // onAuthStateChange gérera le reste automatiquement
     return data;
   };
 
-  // ─── Register ─────────────────────────────────────────────────────────────
+  // ─── Register ──────────────────────────────────────────────────────────────
   const register = async ({ studentId, fullName, email, password }) => {
     const data = await authAPI.register({ studentId, fullName, email, password });
-    localStorage.setItem('eco_token', data.token);
-    localStorage.setItem('eco_user', JSON.stringify({ uid: data.user.uid, email: data.user.email }));
-    setUser({ uid: data.user.uid, email: data.user.email });
-    setUserData(data.user);
     return data;
   };
 
   // ─── Logout ────────────────────────────────────────────────────────────────
-  const logout = () => {
-    localStorage.removeItem('eco_token');
-    localStorage.removeItem('eco_user');
+  const logout = async () => {
+    await authAPI.logout();
     setUser(null);
     setUserData(null);
     toast.success('Déconnexion réussie');
   };
 
-  // ─── Update local userData (e.g. after redeem) ────────────────────────────
+  // ─── Refresh profil manuellement ──────────────────────────────────────────
   const refreshUser = async () => {
-    try {
-      const data = await usersAPI.getMe();
-      setUserData(data);
-    } catch {
-      // silent
-    }
+    if (user) await loadProfile(user);
   };
 
   const updateLocalPoints = (newPoints) => {

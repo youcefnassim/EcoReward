@@ -75,7 +75,7 @@ const Dashboard = () => {
           <div>
             <h2 className="text-gray-400 font-bold text-xs uppercase tracking-widest mb-1">{t('welcome')}</h2>
             <h1 className="text-2xl font-black text-gray-900 dark:text-white leading-tight">
-              {userData?.fullName || 'Utilisateur'}
+              {userData?.full_name || 'Utilisateur'}
             </h1>
           </div>
           <div className="flex-shrink-0 w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-eco overflow-hidden border-2 border-green-500/20">
@@ -106,7 +106,7 @@ const Dashboard = () => {
 
         {/* PWA Install Banner */}
         {showInstallBanner && (
-          <div className="mb-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-[2rem] p-4 flex items-center justify-between gap-3 shadow-lg shadow-green-500/20 animate-in slide-in-from-top">
+          <div className="mb-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-[2rem] p-4 flex items-center justify-between gap-3 shadow-lg shadow-green-500/20 slide-in-from-top">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Download className="w-5 h-5 text-white" />

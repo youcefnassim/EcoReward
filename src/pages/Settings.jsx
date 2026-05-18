@@ -66,7 +66,7 @@ const Settings = () => {
             <img src={userData?.avatar || logo} alt="Avatar" className="w-full h-full object-cover" />
           </div>
           <div className="relative z-10 flex-1">
-            <h2 className="text-xl font-black text-gray-900 dark:text-white leading-tight">{userData?.fullName || 'Étudiant'}</h2>
+            <h2 className="text-xl font-black text-gray-900 dark:text-white leading-tight">{userData?.full_name || 'Étudiant'}</h2>
             <p className="text-sm text-gray-400 font-bold tracking-wider mt-0.5">ID: {userData?.studentId || 'N/A'}</p>
             <button 
               onClick={() => navigate('/profile-edit')}
