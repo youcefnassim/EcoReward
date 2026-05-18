@@ -1,0 +1,19 @@
+# Backend — géré séparément (non déployé sur Vercel)
+backend/
+
+# Fichiers secrets
+.env
+.env.local
+.env.*.local
+
+# Fichiers SQLite locaux
+*.db
+*.db-shm
+*.db-wal
+
+# Screenshots / images de démo
+*.png
+!src/assets/
+
+# Supabase CLI local
+.supabase/
