@@ -1,26 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl  = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// VITE_ vars are PUBLIC by design (Vercel warns about this explicitly).
+// Fallback values are safe to hardcode for the anon/publishable key.
+const supabaseUrl  = import.meta.env.VITE_SUPABASE_URL  || 'https://mekajxpzcwwnsnxiscns.supabase.co';
+const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_MYlqjgNzQdTMPzMUFqHI8Q_EIV0mDgd';
 
-if (!supabaseUrl || supabaseUrl.includes('placeholder')) {
-  console.error('❌ VITE_SUPABASE_URL manquante ou invalide:', supabaseUrl);
-}
-if (!supabaseAnon || supabaseAnon.includes('placeholder')) {
-  console.error('❌ VITE_SUPABASE_ANON_KEY manquante ou invalide');
-}
-
-console.log('🔗 Supabase URL:', supabaseUrl || 'NON DÉFINIE');
-
-export const supabase = createClient(
-  supabaseUrl  || 'https://placeholder.supabase.co',
-  supabaseAnon || 'placeholder-anon-key',
-  {
-    auth: {
-      persistSession:    true,
-      autoRefreshToken:  true,
-      detectSessionInUrl: true,
-    },
-  }
-);
-
+export const supabase = createClient(supabaseUrl, supabaseAnon, {
+  auth: {
+    persistSession:     true,
+    autoRefreshToken:   true,
+    detectSessionInUrl: true,
+  },
+});
