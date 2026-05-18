@@ -10,14 +10,14 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor':   ['react', 'react-dom', 'react-router-dom'],
-          'supabase':       ['@supabase/supabase-js'],
-          'map':            ['leaflet', 'react-leaflet'],
-          'ui':             ['lucide-react', 'react-hot-toast', 'clsx', 'zustand'],
+        manualChunks: (id) => {
+          if (id.includes('node_modules/@supabase')) return 'supabase';
+          if (id.includes('node_modules/leaflet') || id.includes('node_modules/react-leaflet')) return 'map';
+          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react-router')) return 'react-vendor';
         },
       },
     },
   },
 })
+
 
